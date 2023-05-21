@@ -99,3 +99,5 @@ class naverWeather():
             # 도시명을 잘못 입력한 경우 결과가 나오지 않는다.
             return "잘못된 도시명입니다"
         return self.result
+    
+    #5/21 test commit
