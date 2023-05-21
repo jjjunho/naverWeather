@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-
+# 5/21 김준엽
+# 5/21 test
 class naverWeather():
     session = requests.Session() 
     addr = "http://weather.naver.com/rgn/cityWetrCity.nhn?cityRgnCd=CT"
