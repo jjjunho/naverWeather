@@ -1,8 +1,10 @@
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulStoneSoup
 import re
+
 # 5/21 김준엽
 # 5/21 test
+
 class naverWeather():
     session = requests.Session() 
     addr = "http://weather.naver.com/rgn/cityWetrCity.nhn?cityRgnCd=CT"
@@ -100,3 +102,38 @@ class naverWeather():
             # 도시명을 잘못 입력한 경우 결과가 나오지 않는다.
             return "잘못된 도시명입니다"
         return self.result
+    
+def display_menu():
+    print("메뉴를 선택하세요:")
+    print("1.관광지")
+    print("2.맛집")
+    print("3.추천펜션")
+    print("4.종료")
+
+def perform_action(option):
+    if option == 1:
+        print("항목 1을 선택하셨습니다.")
+        #항목 1을 수행하는 코드
+    elif option == 2:
+        print("항목 2를 선택하셨습니다.")
+        #항목 2를 수행하는 코드
+    elif option == 3:
+        print("항목 3을 선택하셨습니다.")
+        #항목 3을 수행하는 코드
+    elif option == 4:
+        print("프로그램을 종료합니다.")
+    else:
+        print("올바른 옵션을 선택해주세요.")
+
+def main():
+    while True:
+        display_menu()
+        option = int(input("선택할 옵션의 번호를 입력하세요: "))
+        perform_action(option)
+        if option == 4:
+            break
+              
+    
+
+if __name__ == "__main__":
+    main()
