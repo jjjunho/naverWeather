@@ -74,6 +74,7 @@ class naverWeather():
     def getWeather(self):
        
         return self.result
+
         
 def display_menu():
     print("메뉴를 선택하세요:")
@@ -118,3 +119,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    
+    
+
