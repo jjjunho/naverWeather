@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import os
 import sys
 import urllib.request
+import json
+import re
 
 print("[간단한 지역 정보 조회 프로그램]")
 
@@ -111,13 +113,23 @@ def main():
             rescode = response.getcode()
             if(rescode==200):
              response_body = response.read()
-             print(response_body.decode('utf-8'))
+             data=json.loads(response_body.decode('utf-8'))
+             for item in data['items']:
+                remove_tag=re.compile('<.*?>')
+                title = re.sub(remove_tag,'',item['title'])
+                category =re.sub(remove_tag,'',item['category'])
+                address = re.sub(remove_tag,'',item['address'])
+                print()
+                print("Title:", title)
+                print("Category:", category)
+                print("Address:", address)
+                print()
             else:
              print("Error Code:" + rescode)
-        # 여기에 항목 1을 수행하는 코드를 작성하세요.
+        
            elif option == 2:
             encText = urllib.parse.quote(city+"맛집")
-            url = "https://openapi.naver.com/v1/search/blog?query=" + encText +'&display=5' # JSON 결과
+            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' # JSON 결과
 
             request = urllib.request.Request(url)
             request.add_header("X-Naver-Client-Id",client_id)
@@ -126,12 +138,22 @@ def main():
             rescode = response.getcode()
             if(rescode==200):
              response_body = response.read()
-             print(response_body.decode('utf-8'))
+             data=json.loads(response_body.decode('utf-8'))
+             for item in data['items']:
+                remove_tag=re.compile('<.*?>')
+                title = re.sub(remove_tag,'',item['title'])
+                category =re.sub(remove_tag,'',item['category'])
+                address = re.sub(remove_tag,'',item['address'])
+                print()
+                print("Title:", title)
+                print("Category:", category)
+                print("Address:", address)
+                print()
             else:
              print("Error Code:" + rescode)
            elif option == 3:
             encText = urllib.parse.quote(city+"펜션")
-            url = "https://openapi.naver.com/v1/search/shop?query=" + encText +'&display=5' # JSON 결과
+            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' + '&sort=comment' # JSON 결과
 
             request = urllib.request.Request(url)
             request.add_header("X-Naver-Client-Id",client_id)
@@ -140,10 +162,20 @@ def main():
             rescode = response.getcode()
             if(rescode==200):
              response_body = response.read()
-             print(response_body.decode('utf-8'))
+             data=json.loads(response_body.decode('utf-8'))
+             for item in data['items']:
+                remove_tag=re.compile('<.*?>')
+                title = re.sub(remove_tag,'',item['title'])
+                link =re.sub(remove_tag,'',item['link'])
+                address = re.sub(remove_tag,'',item['address'])
+                print()
+                print("Title:", title)
+                print("link:", link)
+                print("Address:", address)
+                print()
             else:
              print("Error Code:" + rescode)
-        # 여기에 항목 3을 수행하는 코드를 작성하세요.
+        
            elif option == 4:
             main()
            elif option == 5:
