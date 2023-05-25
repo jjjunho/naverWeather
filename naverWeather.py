@@ -1,5 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
+import os
+import sys
+import urllib.request
 
 print("[간단한 지역 정보 조회 프로그램]")
 
@@ -85,35 +88,48 @@ def display_menu():
     print("5.종료")
     
 
-def perform_action(option):
-    if option == 1:
-        print("")
-        # 여기에 항목 1을 수행하는 코드
-    elif option == 2:
-        print("항목 2를 선택하셨습니다.")
-        # 여기에 항목 2를 수행하는 코드
-    elif option == 3:
-        print("항목 3을 선택하셨습니다.")
-        # 여기에 항목 3을 수행하는 코드
-    elif option == 4:
-        main()
-    elif option == 5:
-        print("프로그램을 종료합니다.")     
-    else:
-        print("올바른 옵션을 선택해주세요.")
+
         
 
 def main():
-              
-        while True: 
-           city = input("지역이름을 입력해주세요: ")    
-           temp = naverWeather(city)
-           print(temp.getWeather())    
-           display_menu()
+    city = input("지역이름을 입력해주세요: ")    
+    temp = naverWeather(city)
+    print(temp.getWeather())
+    while True: 
+           display_menu()    
            option = int(input("선택할 옵션의 번호를 입력하세요: "))
-           perform_action(option)
+           if option == 1:
+            print("")
+        # 여기에 항목 1을 수행하는 코드를 작성하세요.
+           elif option == 2:
+        
+            client_id = "VbT2fYWoyz09OkGzSC5v"
+            client_secret = "kZ6yj5Wvfa"
+            encText = urllib.parse.quote(city+"맛집")
+            url = "https://openapi.naver.com/v1/search/blog?query=" + encText +'&display=5' # JSON 결과
+
+            request = urllib.request.Request(url)
+            request.add_header("X-Naver-Client-Id",client_id)
+            request.add_header("X-Naver-Client-Secret",client_secret)
+            response = urllib.request.urlopen(request)
+            rescode = response.getcode()
+            if(rescode==200):
+             response_body = response.read()
+             print(response_body.decode('utf-8'))
+            else:
+             print("Error Code:" + rescode)
+           elif option == 3:
+             print("항목 3을 선택하셨습니다.")
+        # 여기에 항목 3을 수행하는 코드를 작성하세요.
+           elif option == 4:
+            main()
+           elif option == 5:
+            print("프로그램을 종료합니다.")     
+           else:
+            print("올바른 옵션을 선택해주세요.")
            if option == 5:
               break
+           
               
     
 
