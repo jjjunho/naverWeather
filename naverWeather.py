@@ -83,10 +83,11 @@ def display_menu():
     print("메뉴를 선택하세요:")
     print("1.관광지")
     print("2.맛집")
-    print("3.추천펜션")
+    print("3.펜션")
     print("4.다른지역검색")
     print("5.종료")
     
+
 
         
 
@@ -97,13 +98,24 @@ def main():
     while True: 
            display_menu()    
            option = int(input("선택할 옵션의 번호를 입력하세요: "))
+           client_id = "VbT2fYWoyz09OkGzSC5v"
+           client_secret = "kZ6yj5Wvfa"
            if option == 1:
-            print("")
+            encText = urllib.parse.quote(city+"관광지")
+            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' # JSON 결과
+
+            request = urllib.request.Request(url)
+            request.add_header("X-Naver-Client-Id",client_id)
+            request.add_header("X-Naver-Client-Secret",client_secret)
+            response = urllib.request.urlopen(request)
+            rescode = response.getcode()
+            if(rescode==200):
+             response_body = response.read()
+             print(response_body.decode('utf-8'))
+            else:
+             print("Error Code:" + rescode)
         # 여기에 항목 1을 수행하는 코드를 작성하세요.
            elif option == 2:
-        
-            client_id = "VbT2fYWoyz09OkGzSC5v"
-            client_secret = "kZ6yj5Wvfa"
             encText = urllib.parse.quote(city+"맛집")
             url = "https://openapi.naver.com/v1/search/blog?query=" + encText +'&display=5' # JSON 결과
 
@@ -118,7 +130,19 @@ def main():
             else:
              print("Error Code:" + rescode)
            elif option == 3:
-             print("항목 3을 선택하셨습니다.")
+            encText = urllib.parse.quote(city+"펜션")
+            url = "https://openapi.naver.com/v1/search/shop?query=" + encText +'&display=5' # JSON 결과
+
+            request = urllib.request.Request(url)
+            request.add_header("X-Naver-Client-Id",client_id)
+            request.add_header("X-Naver-Client-Secret",client_secret)
+            response = urllib.request.urlopen(request)
+            rescode = response.getcode()
+            if(rescode==200):
+             response_body = response.read()
+             print(response_body.decode('utf-8'))
+            else:
+             print("Error Code:" + rescode)
         # 여기에 항목 3을 수행하는 코드를 작성하세요.
            elif option == 4:
             main()
