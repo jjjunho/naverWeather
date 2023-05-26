@@ -11,7 +11,7 @@ print("[간단한 지역 정보 조회 프로그램]")
 
 
 class naverWeather():
-    session = requests.Session()  #세션 유지 : http요청을 유지하면서 데이터를 저장할 수있다.
+    session = requests.Session()  
     addr = "https://weather.naver.com/today/"
     map_cityNum = {     # 지역 번호 매핑
         '가평': "02820250",'강화': "11710250",'고양': "02281621",'과천': "02290107",'광명': "02210610",'광주': "02610103",'구리': "02310541",'군포': "02410510",
@@ -90,27 +90,39 @@ def display_menu():
     print("5.종료")
     
 
-
-        
-
 def main():
     city = input("지역이름을 입력해주세요: ")    
     temp = naverWeather(city)
     print(temp.getWeather())
-    while True: 
-           display_menu()    
-           option = int(input("선택할 옵션의 번호를 입력하세요: "))
-           client_id = "VbT2fYWoyz09OkGzSC5v"
-           client_secret = "kZ6yj5Wvfa"
-           if option == 1:
-            encText = urllib.parse.quote(city+"관광지")
-            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' # JSON 결과
+    area_url="https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query="
+    search_url=area_url+city
+    r= requests.get(search_url)
+    soup=BeautifulSoup(r.text,"html.parser")
+    a=soup.select(".desc-YyCP9")
+    try:
+            print(a[0].text)
+            print()
+    except ValueError:
+            pass 
+    except IndexError:
+            pass
 
+
+    while True:
+        display_menu()  
+        option = int(input("선택할 옵션의 번호를 입력하세요: "))  
+        client_id = "VbT2fYWoyz09OkGzSC5v"
+        client_secret = "kZ6yj5Wvfa"
+
+        if option == 1:
+            encText = urllib.parse.quote(city+"관광지")
+            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' 
             request = urllib.request.Request(url)
             request.add_header("X-Naver-Client-Id",client_id)
             request.add_header("X-Naver-Client-Secret",client_secret)
             response = urllib.request.urlopen(request)
             rescode = response.getcode()
+
             if(rescode==200):
              response_body = response.read()
              data=json.loads(response_body.decode('utf-8'))
@@ -127,15 +139,15 @@ def main():
             else:
              print("Error Code:" + rescode)
         
-           elif option == 2:
+        elif option == 2:
             encText = urllib.parse.quote(city+"맛집")
-            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' # JSON 결과
-
+            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' 
             request = urllib.request.Request(url)
             request.add_header("X-Naver-Client-Id",client_id)
             request.add_header("X-Naver-Client-Secret",client_secret)
             response = urllib.request.urlopen(request)
             rescode = response.getcode()
+
             if(rescode==200):
              response_body = response.read()
              data=json.loads(response_body.decode('utf-8'))
@@ -151,15 +163,16 @@ def main():
                 print()
             else:
              print("Error Code:" + rescode)
-           elif option == 3:
-            encText = urllib.parse.quote(city+"펜션")
-            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' + '&sort=comment' # JSON 결과
 
+        elif option == 3:
+            encText = urllib.parse.quote(city+"펜션")
+            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' + '&sort=comment' 
             request = urllib.request.Request(url)
             request.add_header("X-Naver-Client-Id",client_id)
             request.add_header("X-Naver-Client-Secret",client_secret)
             response = urllib.request.urlopen(request)
             rescode = response.getcode()
+
             if(rescode==200):
              response_body = response.read()
              data=json.loads(response_body.decode('utf-8'))
@@ -176,13 +189,13 @@ def main():
             else:
              print("Error Code:" + rescode)
         
-           elif option == 4:
+        elif option == 4:
             main()
-           elif option == 5:
+        elif option == 5:
             print("프로그램을 종료합니다.")     
-           else:
+        else:
             print("올바른 옵션을 선택해주세요.")
-           if option == 5:
+        if option == 5:
               break
            
               
