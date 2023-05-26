@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import os
 import sys
 import urllib.request
+import json
+import re
 
 print("[간단한 지역 정보 조회 프로그램]")
 
@@ -83,7 +85,7 @@ def display_menu():
     print("메뉴를 선택하세요:")
     print("1.관광지")
     print("2.맛집")
-    print("3.추천펜션")
+    print("3.펜션")
     print("4.다른지역검색")
     print("5.종료")
     
@@ -98,15 +100,11 @@ def main():
     while True: 
            display_menu()    
            option = int(input("선택할 옵션의 번호를 입력하세요: "))
+           client_id = "VbT2fYWoyz09OkGzSC5v"
+           client_secret = "kZ6yj5Wvfa"
            if option == 1:
-            print("")
-        # 여기에 항목 1을 수행하는 코드를 작성하세요.
-           elif option == 2:
-        
-            client_id = "VbT2fYWoyz09OkGzSC5v"
-            client_secret = "kZ6yj5Wvfa"
-            encText = urllib.parse.quote(city+"맛집")
-            url = "https://openapi.naver.com/v1/search/blog?query=" + encText +'&display=5' # JSON 결과
+            encText = urllib.parse.quote(city+"관광지")
+            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' # JSON 결과
 
             request = urllib.request.Request(url)
             request.add_header("X-Naver-Client-Id",client_id)
@@ -115,12 +113,69 @@ def main():
             rescode = response.getcode()
             if(rescode==200):
              response_body = response.read()
-             print(response_body.decode('utf-8'))
+             data=json.loads(response_body.decode('utf-8'))
+             for item in data['items']:
+                remove_tag=re.compile('<.*?>')
+                title = re.sub(remove_tag,'',item['title'])
+                category =re.sub(remove_tag,'',item['category'])
+                address = re.sub(remove_tag,'',item['address'])
+                print()
+                print("Title:", title)
+                print("Category:", category)
+                print("Address:", address)
+                print()
+            else:
+             print("Error Code:" + rescode)
+        
+           elif option == 2:
+            encText = urllib.parse.quote(city+"맛집")
+            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' # JSON 결과
+
+            request = urllib.request.Request(url)
+            request.add_header("X-Naver-Client-Id",client_id)
+            request.add_header("X-Naver-Client-Secret",client_secret)
+            response = urllib.request.urlopen(request)
+            rescode = response.getcode()
+            if(rescode==200):
+             response_body = response.read()
+             data=json.loads(response_body.decode('utf-8'))
+             for item in data['items']:
+                remove_tag=re.compile('<.*?>')
+                title = re.sub(remove_tag,'',item['title'])
+                category =re.sub(remove_tag,'',item['category'])
+                address = re.sub(remove_tag,'',item['address'])
+                print()
+                print("Title:", title)
+                print("Category:", category)
+                print("Address:", address)
+                print()
             else:
              print("Error Code:" + rescode)
            elif option == 3:
-             print("항목 3을 선택하셨습니다.")
-        # 여기에 항목 3을 수행하는 코드를 작성하세요.
+            encText = urllib.parse.quote(city+"펜션")
+            url = "https://openapi.naver.com/v1/search/local?query=" + encText +'&display=5' + '&sort=comment' # JSON 결과
+
+            request = urllib.request.Request(url)
+            request.add_header("X-Naver-Client-Id",client_id)
+            request.add_header("X-Naver-Client-Secret",client_secret)
+            response = urllib.request.urlopen(request)
+            rescode = response.getcode()
+            if(rescode==200):
+             response_body = response.read()
+             data=json.loads(response_body.decode('utf-8'))
+             for item in data['items']:
+                remove_tag=re.compile('<.*?>')
+                title = re.sub(remove_tag,'',item['title'])
+                link =re.sub(remove_tag,'',item['link'])
+                address = re.sub(remove_tag,'',item['address'])
+                print()
+                print("Title:", title)
+                print("link:", link)
+                print("Address:", address)
+                print()
+            else:
+             print("Error Code:" + rescode)
+        
            elif option == 4:
             main()
            elif option == 5:
